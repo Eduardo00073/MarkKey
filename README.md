@@ -11,11 +11,15 @@
   ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 
-  [Interface](#interface) · [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Segurança](SECURITY.md)
+  [![Site](https://img.shields.io/badge/site-prof--eduardo.com-0EA5E9?logo=googlechrome&logoColor=white)](https://www.prof-eduardo.com/)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-edu7-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/edu7/)
+  [![GitHub](https://img.shields.io/badge/GitHub-Eduardo00073-181717?logo=github&logoColor=white)](https://github.com/Eduardo00073)
+
+  [Interface](#interface) · [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Autor](#autor) · [Segurança](SECURITY.md)
 </div>
 
-> [!IMPORTANT]
-> Este é um repositório privado e sem licença de uso por terceiros. O acesso ao código não concede permissão para copiar, modificar ou distribuir o projeto.
+> [!NOTE]
+> Este é um projeto público de desenvolvimento e portfólio. O código pode ser consultado e estudado, mas o repositório ainda não possui uma licença que autorize sua cópia, modificação ou distribuição por terceiros.
 
 ## Interface
 
@@ -199,6 +203,14 @@ Antes de alterar o projeto, leia:
 - [CONTRIBUTING.md](CONTRIBUTING.md) — ambiente, branches, padrões e checklist de pull request;
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — responsabilidades e fronteiras entre os processos;
 - [SECURITY.md](SECURITY.md) — escopo e divulgação responsável de vulnerabilidades.
+
+## Autor
+
+Desenvolvido por **Eduardo Junior Alcântara da Silva**, desenvolvedor Full Stack e professor de Programação, Informática e Robótica, com atuação em desenvolvimento web e desktop, cibersegurança, inteligência artificial e educação tecnológica.
+
+- 🌐 [Site oficial — prof-eduardo.com](https://www.prof-eduardo.com/)
+- 💼 [LinkedIn — Eduardo Alcântara](https://www.linkedin.com/in/edu7/)
+- 💻 [GitHub — @Eduardo00073](https://github.com/Eduardo00073)
 
 ---
 

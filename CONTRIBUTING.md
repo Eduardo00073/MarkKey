@@ -2,8 +2,8 @@
 
 Obrigado por ajudar a evoluir o MacroKey. Este documento descreve o caminho esperado entre uma ideia e uma alteração integrada à branch `main`.
 
-> [!IMPORTANT]
-> O projeto e o repositório são privados. Somente colaboradores autorizados podem usar o código ou enviar mudanças.
+> [!NOTE]
+> O repositório é público e aceita issues e pull requests. Como o projeto ainda não possui uma licença de reutilização, consulte o aviso de direitos no [README](README.md) antes de usar o código fora deste repositório.
 
 ## Navegação rápida
 
@@ -24,7 +24,7 @@ Obrigado por ajudar a evoluir o MacroKey. Este documento descreve o caminho espe
 - Node.js 22.12 ou mais recente;
 - npm 10 ou mais recente;
 - Git configurado com seu nome e e-mail;
-- acesso ao repositório privado.
+- uma conta no GitHub para abrir issues ou enviar pull requests.
 
 ### Preparação do ambiente
 
@@ -35,6 +35,8 @@ npm install
 npm run check
 npm run dev
 ```
+
+Se você não tiver permissão de escrita, faça um fork no GitHub e clone o seu fork antes de criar a branch de trabalho.
 
 Se a validação inicial falhar antes de qualquer alteração, registre o resultado e resolva o estado de base antes de iniciar uma nova funcionalidade.
 
