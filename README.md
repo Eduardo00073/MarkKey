@@ -10,16 +10,17 @@
   ![Electron](https://img.shields.io/badge/Electron-44-47848F?logo=electron&logoColor=white)
   ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+  [![Licença](https://img.shields.io/badge/licen%C3%A7a-PolyForm%20Noncommercial-7C3AED)](LICENSE)
 
   [![Site](https://img.shields.io/badge/site-prof--eduardo.com-0EA5E9?logo=googlechrome&logoColor=white)](https://www.prof-eduardo.com/)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-edu7-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/edu7/)
   [![GitHub](https://img.shields.io/badge/GitHub-Eduardo00073-181717?logo=github&logoColor=white)](https://github.com/Eduardo00073)
 
-  [Interface](#interface) · [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Autor](#autor) · [Segurança](SECURITY.md)
+  [Interface](#interface) · [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Licença](#licença) · [Autor](#autor) · [Segurança](SECURITY.md)
 </div>
 
 > [!NOTE]
-> Este é um projeto público de desenvolvimento e portfólio. O código pode ser consultado e estudado, mas o repositório ainda não possui uma licença que autorize sua cópia, modificação ou distribuição por terceiros.
+> Este é um projeto público e **source available**, licenciado para estudo e demais usos não comerciais. Uso por empresas, monetização ou qualquer aplicação com finalidade comercial exige autorização prévia do autor.
 
 ## Interface
 
@@ -203,6 +204,22 @@ Antes de alterar o projeto, leia:
 - [CONTRIBUTING.md](CONTRIBUTING.md) — ambiente, branches, padrões e checklist de pull request;
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — responsabilidades e fronteiras entre os processos;
 - [SECURITY.md](SECURITY.md) — escopo e divulgação responsável de vulnerabilidades.
+
+## Licença
+
+O MacroKey é disponibilizado sob a [PolyForm Noncommercial License 1.0.0](LICENSE), identificada no SPDX como `PolyForm-Noncommercial-1.0.0`.
+
+| Finalidade | Condição |
+| --- | --- |
+| Estudo, pesquisa, ensino, experimentação e projetos de hobby | **Permitido**, sem cobrança. |
+| Uso pessoal sem finalidade comercial | **Permitido**, preservando a atribuição ao autor. |
+| Modificação ou redistribuição não comercial | **Permitido**, desde que `LICENSE` e `NOTICE` acompanhem a cópia. |
+| Uso empresarial, profissional, monetizado ou com geração direta ou indireta de receita | **Não coberto pela licença pública**; exige autorização escrita e licença comercial separada. |
+
+As atribuições obrigatórias e o contato comercial estão no arquivo [NOTICE](NOTICE). Para solicitar uso comercial, entre em contato pelo [site oficial](https://www.prof-eduardo.com/).
+
+> [!IMPORTANT]
+> A restrição a usos comerciais significa que esta não é uma licença open source aprovada pela OSI. O termo correto para o projeto é **source available**.
 
 ## Autor
 

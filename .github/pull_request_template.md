@@ -26,6 +26,7 @@
 
 - [ ] A mudança está restrita ao objetivo do pull request.
 - [ ] Não há arquivos gerados, dados pessoais ou segredos no commit.
+- [ ] Li e aceito a seção **Licença das contribuições** de `CONTRIBUTING.md`.
 - [ ] Entradas externas e novos handlers IPC possuem validação adequada.
 - [ ] A documentação foi atualizada quando comportamento ou arquitetura mudaram.
 - [ ] O PR não expõe detalhes de vulnerabilidade ainda não corrigida.

@@ -3,7 +3,7 @@
 Obrigado por ajudar a evoluir o MacroKey. Este documento descreve o caminho esperado entre uma ideia e uma alteração integrada à branch `main`.
 
 > [!NOTE]
-> O repositório é público e aceita issues e pull requests. Como o projeto ainda não possui uma licença de reutilização, consulte o aviso de direitos no [README](README.md) antes de usar o código fora deste repositório.
+> O repositório é público e aceita issues e pull requests. O código é disponibilizado sob a [PolyForm Noncommercial License 1.0.0](LICENSE); usos comerciais exigem uma licença separada do autor.
 
 ## Navegação rápida
 
@@ -14,6 +14,7 @@ Obrigado por ajudar a evoluir o MacroKey. Este documento descreve o caminho espe
 - [Validação](#validação)
 - [Commits](#commits)
 - [Pull requests](#pull-requests)
+- [Licença das contribuições](#licença-das-contribuições)
 - [Definição de pronto](#definição-de-pronto)
 
 ## Antes de começar
@@ -211,6 +212,12 @@ Inclua:
 - [ ] Os dois temas foram conferidos quando a interface mudou.
 - [ ] A documentação acompanha mudanças de comportamento ou arquitetura.
 - [ ] O PR explica riscos e limitações conhecidos.
+
+## Licença das contribuições
+
+Ao enviar código, documentação ou outro material para este repositório, você declara que possui o direito de fazê-lo e concede a **Eduardo Junior Alcântara da Silva** uma licença não exclusiva, mundial, perpétua, irrevogável, sublicenciável e livre de royalties para usar, reproduzir, modificar, distribuir e relicenciar comercialmente a contribuição.
+
+Você continua titular dos direitos autorais sobre o material que criou. Essa concessão permite que o mantenedor preserve o modelo de uso não comercial para a comunidade e, ao mesmo tempo, ofereça licenças comerciais separadas. Se você não puder conceder esses direitos, não envie a contribuição.
 
 ## Definição de pronto
 
