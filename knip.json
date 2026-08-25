@@ -1,0 +1,6 @@
+{
+  "entry": ["src/renderer/index.tsx"],
+  "project": [
+    "src/**/*.{ts,tsx}"
+  ]
+}

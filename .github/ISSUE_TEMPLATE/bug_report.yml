@@ -1,0 +1,42 @@
+name: Bug
+description: Relate um comportamento incorreto ou inesperado.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: Explique o problema e o comportamento esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Como reproduzir
+      description: Liste os passos mínimos para reproduzir o problema.
+      placeholder: |
+        1. Abra...
+        2. Configure...
+        3. Execute...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão ou commit
+      placeholder: v1.0.0 ou hash do commit
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Versão do Windows
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Informações adicionais
+      description: Inclua logs ou imagens sem dados pessoais ou segredos.

@@ -1,0 +1,74 @@
+/* ============================================
+   MacroKey — Animations & Keyframes
+   ============================================ */
+
+/* Pulse glow for active indicators */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 6px var(--status-active-glow);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 14px var(--status-active-glow);
+  }
+}
+
+/* Subtle float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Fade in from bottom */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in scale */
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Typing cursor blink */
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ---- Utility animation classes ---- */
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale 0.25s ease forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Staggered animation delays for lists */
+.stagger-1 { animation-delay: 0.03s; }
+.stagger-2 { animation-delay: 0.06s; }
+.stagger-3 { animation-delay: 0.09s; }
+.stagger-4 { animation-delay: 0.12s; }
+.stagger-5 { animation-delay: 0.15s; }
+.stagger-6 { animation-delay: 0.18s; }
+.stagger-7 { animation-delay: 0.21s; }
+.stagger-8 { animation-delay: 0.24s; }

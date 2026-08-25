@@ -1,0 +1,76 @@
+{
+  "name": "macrokey",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicativo de macros globais para Windows",
+  "author": {
+    "name": "Eduardo Junior Alcântara da Silva",
+    "email": "eduardo00073@users.noreply.github.com",
+    "url": "https://github.com/Eduardo00073"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eduardo00073/MarkKey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eduardo00073/MarkKey/issues"
+  },
+  "homepage": "https://github.com/Eduardo00073/MarkKey#readme",
+  "keywords": [
+    "electron",
+    "typescript",
+    "windows",
+    "macros",
+    "automation",
+    "keyboard-hook"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "set ELECTRON_RUN_AS_NODE=&& electron-vite dev",
+    "typecheck": "tsc --noEmit -p tsconfig.main.json && tsc --noEmit -p tsconfig.preload.json && tsc --noEmit -p tsconfig.renderer.json",
+    "check": "npm run typecheck && knip --no-progress && knip --no-progress --cycles && npm audit",
+    "build": "npm run typecheck && electron-vite build",
+    "preview": "set ELECTRON_RUN_AS_NODE=&& electron-vite preview",
+    "package": "npm run build && electron-builder --win"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "electron-store": "^10.0.0",
+    "koffi": "^3.1.4",
+    "lucide-react": "^0.500.0",
+    "monaco-editor": "^0.52.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "electron": "^44.0.0",
+    "electron-builder": "^26.0.0",
+    "electron-vite": "^3.1.0",
+    "knip": "^6.32.2",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0"
+  },
+  "build": {
+    "appId": "com.macrokey.app",
+    "productName": "MacroKey",
+    "win": {
+      "target": "portable"
+    },
+    "files": [
+      "out/**/*"
+    ]
+  },
+  "allowScripts": {
+    "electron@44.0.0": true,
+    "esbuild@0.25.12": true,
+    "electron-winstaller@5.4.0": true,
+    "koffi@3.1.4": true
+  }
+}

@@ -1,0 +1,24 @@
+name: Melhoria
+description: Sugira uma funcionalidade ou evolução para o MacroKey.
+title: "[Melhoria]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: Qual necessidade ou limitação esta proposta resolve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: Descreva a solução e o comportamento esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Há outra forma de resolver o mesmo problema?
