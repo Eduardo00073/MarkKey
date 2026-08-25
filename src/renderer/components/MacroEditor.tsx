@@ -2,7 +2,7 @@ import { useCallback, useMemo, type FC, type ReactNode } from 'react'
 import Editor from '@monaco-editor/react'
 import { HotkeyPicker } from './HotkeyPicker'
 import { Save, Trash2, Keyboard, Zap, Copy } from 'lucide-react'
-import type { Macro, MacroMode, MacroUpdate } from '../../shared/types'
+import type { AppTheme, Macro, MacroMode, MacroUpdate } from '../../shared/types'
 
 interface MacroEditorProps {
   macro: Macro
@@ -10,6 +10,7 @@ interface MacroEditorProps {
   onSave: () => void
   onDelete: () => void
   usedHotkeys: string[]
+  theme: AppTheme
 }
 
 /** Mode options for the selector */
@@ -40,7 +41,8 @@ export const MacroEditor: FC<MacroEditorProps> = ({
   onChange,
   onSave,
   onDelete,
-  usedHotkeys
+  usedHotkeys,
+  theme
 }) => {
   const handleEditorChange = useCallback(
     (value: string | undefined) => {
@@ -168,9 +170,38 @@ export const MacroEditor: FC<MacroEditorProps> = ({
           defaultLanguage="plaintext"
           value={macro.content}
           onChange={handleEditorChange}
-          theme="macrokey-dark"
+          theme={`macrokey-${theme}`}
           beforeMount={(monaco) => {
-            // Define custom dark theme to match our design
+            monaco.editor.defineTheme('macrokey-light', {
+              base: 'vs',
+              inherit: true,
+              rules: [
+                { token: '', foreground: '172033', background: 'FFFFFF' },
+                { token: 'comment', foreground: '7B8498', fontStyle: 'italic' },
+                { token: 'keyword', foreground: '4F46E5' },
+                { token: 'string', foreground: '087C56' },
+                { token: 'number', foreground: 'B45309' },
+                { token: 'tag', foreground: '4338CA' },
+                { token: 'attribute.name', foreground: '6D28D9' },
+                { token: 'attribute.value', foreground: '087C56' }
+              ],
+              colors: {
+                'editor.background': '#FFFFFF',
+                'editor.foreground': '#172033',
+                'editor.lineHighlightBackground': '#F6F7FB',
+                'editor.selectionBackground': '#4F46E526',
+                'editorCursor.foreground': '#4F46E5',
+                'editor.inactiveSelectionBackground': '#4F46E514',
+                'editorLineNumber.foreground': '#A0A7B6',
+                'editorLineNumber.activeForeground': '#4F46E5',
+                'editorIndentGuide.background1': '#E4E7EF',
+                'editorIndentGuide.activeBackground1': '#A5B4FC',
+                'scrollbarSlider.background': '#CBD1DD80',
+                'scrollbarSlider.hoverBackground': '#818CF880',
+                'editorWidget.background': '#FFFFFF',
+                'editorWidget.border': '#D9DDE7'
+              }
+            })
             monaco.editor.defineTheme('macrokey-dark', {
               base: 'vs-dark',
               inherit: true,

@@ -5,6 +5,21 @@
 /** Execution mode for a macro */
 export type MacroMode = 'intercept' | 'autotype' | 'burst'
 
+/** Visual theme selected by the user */
+export type AppTheme = 'light' | 'dark'
+
+/** Persistent application preferences */
+export interface AppSettings {
+  theme: AppTheme
+  launchAtStartup: boolean
+  showHud: boolean
+}
+
+/** Platform-dependent features available in the current build */
+export interface AppCapabilities {
+  launchAtStartup: boolean
+}
+
 /** Macro typing speed configuration */
 interface TypingSpeed {
   /** Minimum delay between characters in ms */
@@ -56,6 +71,11 @@ export const IPC = {
   MACROS_EXPORT: 'macros:export',
   MACROS_IMPORT: 'macros:import',
   MACROS_CHANGED: 'macros:changed',
+
+  // Settings
+  SETTINGS_GET: 'settings:get',
+  SETTINGS_UPDATE: 'settings:update',
+  CAPABILITIES_GET: 'capabilities:get',
 
   // Engine
   ENGINE_STATUS: 'engine:status',

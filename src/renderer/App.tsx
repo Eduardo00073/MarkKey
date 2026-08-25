@@ -4,8 +4,17 @@ import { Sidebar } from './components/Sidebar'
 import { StatusBar } from './components/StatusBar'
 import { MacroList } from './components/MacroList'
 import { MacroEditor } from './components/MacroEditor'
+import { SettingsPanel } from './components/SettingsPanel'
 import { Keyboard, Plus, CheckCircle, AlertCircle } from 'lucide-react'
-import type { Macro, MacroInput, MacroUpdate, EngineStatus } from '../shared/types'
+import type {
+  AppCapabilities,
+  AppSettings,
+  AppTheme,
+  EngineStatus,
+  Macro,
+  MacroInput,
+  MacroUpdate
+} from '../shared/types'
 
 /** Default engine status (idle state) */
 const IDLE_ENGINE: EngineStatus = {
@@ -15,6 +24,16 @@ const IDLE_ENGINE: EngineStatus = {
   totalChars: 0,
   currentIndex: 0,
   preview: ''
+}
+
+function getInitialTheme(): AppTheme {
+  return localStorage.getItem('macrokey-theme') === 'dark' ? 'dark' : 'light'
+}
+
+const DEFAULT_SETTINGS: AppSettings = {
+  theme: getInitialTheme(),
+  launchAtStartup: true,
+  showHud: false
 }
 
 /** Create a blank macro template */
@@ -37,6 +56,9 @@ const App: FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [editingMacro, setEditingMacro] = useState<Macro | null>(null)
   const [engineStatus, setEngineStatus] = useState<EngineStatus>(IDLE_ENGINE)
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS)
+  const [capabilities, setCapabilities] = useState<AppCapabilities>({ launchAtStartup: false })
+  const [showSettings, setShowSettings] = useState(false)
   const [toasts, setToasts] = useState<{ id: number; message: string; type: 'success' | 'error' }[]>([])
 
   /** Show a toast notification that auto-dismisses */
@@ -49,7 +71,19 @@ const App: FC = () => {
   // ---- Load macros on mount ----
   useEffect(() => {
     loadMacros()
+    void Promise.all([window.api.getSettings(), window.api.getCapabilities()])
+      .then(([savedSettings, appCapabilities]) => {
+        setSettings(savedSettings)
+        setCapabilities(appCapabilities)
+      })
+      .catch((error) => console.error('Failed to load settings:', error))
   }, [])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = settings.theme
+    document.documentElement.style.colorScheme = settings.theme
+    localStorage.setItem('macrokey-theme', settings.theme)
+  }, [settings.theme])
 
   // ---- Listen for engine status updates from main process ----
   useEffect(() => {
@@ -197,13 +231,29 @@ const App: FC = () => {
     }
   }, [showToast])
 
+  const handleSettingsChange = useCallback(async (updates: Partial<AppSettings>) => {
+    try {
+      const updated = await window.api.updateSettings(updates)
+      setSettings(updated)
+    } catch (error) {
+      console.error('Failed to update settings:', error)
+      showToast('Não foi possível salvar a preferência', 'error')
+    }
+  }, [showToast])
+
   // ---- Render ----
   const showEditor = editingMacro !== null
   const showEmptyState = !showEditor && filteredMacros.length === 0
 
   return (
     <>
-      <TitleBar />
+      <TitleBar
+        theme={settings.theme}
+        onToggleTheme={() => {
+          void handleSettingsChange({ theme: settings.theme === 'light' ? 'dark' : 'light' })
+        }}
+        onOpenSettings={() => setShowSettings(true)}
+      />
       {/* Toast notifications */}
       <div className="toast-container">
         {toasts.map((t) => (
@@ -231,13 +281,16 @@ const App: FC = () => {
         <main className="content">
           {/* Header */}
           <div className="content__header">
-            <h1 className="content__header-title">
-              {activeCategory === 'all'
-                ? 'Todos os Macros'
-                : activeCategory === 'favorites'
-                  ? 'Favoritos'
-                  : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
-            </h1>
+            <div className="content__header-copy">
+              <span className="content__eyebrow">Biblioteca</span>
+              <h1 className="content__header-title">
+                {activeCategory === 'all'
+                  ? 'Todos os macros'
+                  : activeCategory === 'favorites'
+                    ? 'Favoritos'
+                    : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
+              </h1>
+            </div>
             {filteredMacros.length > 0 && (
               <span className="content__header-badge">{filteredMacros.length}</span>
             )}
@@ -271,6 +324,7 @@ const App: FC = () => {
                   onSave={handleSave}
                   onDelete={handleDelete}
                   usedHotkeys={usedHotkeys}
+                  theme={settings.theme}
                 />
               </div>
             )}
@@ -283,7 +337,7 @@ const App: FC = () => {
                 </div>
                 <div className="content__empty-title">Nenhum macro ainda</div>
                 <div className="content__empty-description">
-                  Crie seu primeiro macro para começar a digitar como o Batman.
+                  Crie um atalho e use seus textos em qualquer aplicativo do Windows.
                 </div>
                 <button className="btn btn--primary" onClick={handleCreate}>
                   <Keyboard size={14} />
@@ -295,6 +349,14 @@ const App: FC = () => {
         </main>
       </div>
       <StatusBar engineStatus={engineStatus} macroCount={macros.length} />
+      {showSettings && (
+        <SettingsPanel
+          settings={settings}
+          capabilities={capabilities}
+          onChange={(updates) => { void handleSettingsChange(updates) }}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </>
   )
 }

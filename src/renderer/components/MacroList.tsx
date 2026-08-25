@@ -39,10 +39,18 @@ export const MacroList: FC<MacroListProps> = ({
       {macros.map((macro, i) => (
         <div
           key={macro.id}
+          role="button"
+          tabIndex={0}
           className={`macro-card animate-fade-in-up stagger-${Math.min(i + 1, 8)} ${
             selectedId === macro.id ? 'macro-card--selected' : ''
           }`}
           onClick={() => onSelect(macro.id)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              onSelect(macro.id)
+            }
+          }}
         >
           {/* Top accent line for selected */}
           <div className="macro-card__header">

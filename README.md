@@ -16,6 +16,9 @@ Aplicativo desktop para criar e executar macros de texto globalmente no Windows.
 - Velocidade configurável e opção de digitação humanizada.
 - HUD flutuante com progresso da macro em execução.
 - Funcionamento em segundo plano pela bandeja do Windows.
+- Tema claro ou escuro, salvo automaticamente.
+- HUD de execução opcional e desativado por padrão.
+- Inicialização com o Windows na versão instalada.
 - Editor de texto baseado no Monaco Editor.
 - Persistência local, favoritos, categorias e contador de uso.
 - Importação e exportação no formato `.macrokey`.
@@ -97,6 +100,8 @@ O MacroKey pode ser distribuído de duas formas. Nenhuma delas exige Node.js, np
 | `MacroKey-Setup-1.0.0.exe` | Instalador tradicional, com escolha da pasta, atalhos e desinstalação pelo Windows. |
 
 Os dois arquivos são gerados dentro de `dist/`. Como ainda não há assinatura digital, o Windows SmartScreen pode exibir um aviso ao abrir o programa em outro computador. Isso não impede a execução, mas uma distribuição pública profissional exigirá um certificado de assinatura de código.
+
+Na versão instalada, **Iniciar com o Windows** vem habilitado e abre o MacroKey diretamente na bandeja. A opção pode ser alterada em **Preferências**. A versão portátil não oferece essa opção porque é extraída para um caminho temporário diferente a cada execução.
 
 ## Estrutura
 

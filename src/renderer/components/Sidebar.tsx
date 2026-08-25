@@ -62,7 +62,8 @@ export const Sidebar: FC<SidebarProps> = ({
 
       <nav className="sidebar__categories">
         {CATEGORIES.map((cat, i) => (
-          <div
+          <button
+            type="button"
             key={cat.id}
             className={`sidebar__item animate-fade-in-up stagger-${i + 1} ${
               activeCategory === cat.id ? 'sidebar__item--active' : ''
@@ -74,12 +75,13 @@ export const Sidebar: FC<SidebarProps> = ({
             {cat.id === 'all' && macroCount > 0 && (
               <span className="sidebar__item-count">{macroCount}</span>
             )}
-          </div>
+          </button>
         ))}
 
         <div className="sidebar__separator" />
 
-        <div
+        <button
+          type="button"
           className={`sidebar__item animate-fade-in-up stagger-7 ${
             activeCategory === 'favorites' ? 'sidebar__item--active' : ''
           }`}
@@ -89,7 +91,7 @@ export const Sidebar: FC<SidebarProps> = ({
             <Star size={16} />
           </span>
           <span>Favoritos</span>
-        </div>
+        </button>
       </nav>
 
       <div className="sidebar__footer">

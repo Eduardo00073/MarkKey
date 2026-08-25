@@ -10,6 +10,15 @@ import { IPC } from '../shared/types'
  */
 export class HudOverlay {
   private window: BrowserWindow | null = null
+  private enabled = false
+
+  /** Enable or disable the overlay without affecting macro execution. */
+  setEnabled(enabled: boolean): void {
+    this.enabled = enabled
+    if (!enabled) {
+      this.hide()
+    }
+  }
 
   /** Create the overlay window (hidden by default) */
   create(): void {
@@ -44,7 +53,7 @@ export class HudOverlay {
 
   /** Show the HUD overlay */
   show(): void {
-    if (!this.window) return
+    if (!this.window || !this.enabled) return
     this.updatePosition()
     this.window.setOpacity(0.85)
     this.window.showInactive()

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="MacroKey — Macro typing engine for Windows" />
+  <meta name="description" content="MacroKey — macros globais para Windows" />
   <title>MacroKey</title>
+  <script>
+    if (localStorage.getItem('macrokey-theme') === 'dark') {
+      document.documentElement.dataset.theme = 'dark'
+      document.documentElement.style.colorScheme = 'dark'
+    }
+  </script>
 </head>
 <body>
   <div id="root"></div>

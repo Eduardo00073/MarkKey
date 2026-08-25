@@ -1,6 +1,13 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { IPC } from '../shared/types'
-import type { Macro, MacroInput, MacroUpdate, EngineStatus } from '../shared/types'
+import type {
+  AppCapabilities,
+  AppSettings,
+  Macro,
+  MacroInput,
+  MacroUpdate,
+  EngineStatus
+} from '../shared/types'
 
 /** API exposed to the renderer process via contextBridge */
 const api = {
@@ -20,6 +27,12 @@ const api = {
       ipcRenderer.removeListener(IPC.MACROS_CHANGED, handler)
     }
   },
+
+  // ---- Application settings ----
+  getSettings: (): Promise<AppSettings> => ipcRenderer.invoke(IPC.SETTINGS_GET),
+  updateSettings: (updates: Partial<AppSettings>): Promise<AppSettings> =>
+    ipcRenderer.invoke(IPC.SETTINGS_UPDATE, updates),
+  getCapabilities: (): Promise<AppCapabilities> => ipcRenderer.invoke(IPC.CAPABILITIES_GET),
 
   // ---- Engine ----
   onEngineStatus: (callback: (status: EngineStatus) => void) => {

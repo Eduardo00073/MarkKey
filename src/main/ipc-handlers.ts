@@ -3,7 +3,12 @@ import { IPC } from '../shared/types'
 import { exportMacros, importMacros } from './import-export'
 import type { MacroStore } from './store'
 import type { TypingEngine } from './typing-engine'
-import type { MacroInput, MacroUpdate } from '../shared/types'
+import type {
+  AppCapabilities,
+  AppSettings,
+  MacroInput,
+  MacroUpdate
+} from '../shared/types'
 
 /**
  * Register all IPC handlers for the renderer to call.
@@ -12,7 +17,9 @@ import type { MacroInput, MacroUpdate } from '../shared/types'
 export function registerIpcHandlers(
   store: MacroStore,
   engine: TypingEngine,
-  window: BrowserWindow
+  window: BrowserWindow,
+  capabilities: AppCapabilities,
+  onSettingsChanged: (settings: AppSettings) => void
 ): void {
   /** Helper: rebuild engine hotkeys after any macro change */
   const rebuildHotkeys = () => {
@@ -67,6 +74,22 @@ export function registerIpcHandlers(
 
     rebuildHotkeys()
     return { count }
+  })
+
+  // ---- Application settings ----
+
+  ipcMain.handle(IPC.SETTINGS_GET, () => {
+    return store.getSettings()
+  })
+
+  ipcMain.handle(IPC.SETTINGS_UPDATE, (_event, updates: Partial<AppSettings>) => {
+    const settings = store.updateSettings(updates)
+    onSettingsChanged(settings)
+    return settings
+  })
+
+  ipcMain.handle(IPC.CAPABILITIES_GET, () => {
+    return capabilities
   })
 
   // ---- Window controls ----

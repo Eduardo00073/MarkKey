@@ -63,6 +63,7 @@
     "appId": "com.macrokey.app",
     "productName": "MacroKey",
     "win": {
+      "icon": "src/renderer/assets/macrokey-icon.png",
       "target": [
         {
           "target": "portable",

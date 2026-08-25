@@ -1,10 +1,17 @@
 import Store from 'electron-store'
 import { randomUUID } from 'node:crypto'
-import type { Macro, MacroInput, MacroUpdate } from '../shared/types'
+import type { AppSettings, Macro, MacroInput, MacroUpdate } from '../shared/types'
 
 /** Schema for electron-store persistence */
 interface StoreSchema {
   macros: Macro[]
+  settings: AppSettings
+}
+
+const DEFAULT_SETTINGS: AppSettings = {
+  theme: 'light',
+  launchAtStartup: true,
+  showHud: false
 }
 
 /** Persistent data store for macros */
@@ -15,9 +22,39 @@ export class MacroStore {
     this.store = new Store<StoreSchema>({
       name: 'macrokey-data',
       defaults: {
-        macros: []
+        macros: [],
+        settings: DEFAULT_SETTINGS
       }
     })
+  }
+
+  // ---- Application settings ----
+
+  /** Get preferences with safe defaults for data created by older versions. */
+  getSettings(): AppSettings {
+    return {
+      ...DEFAULT_SETTINGS,
+      ...this.store.get('settings', DEFAULT_SETTINGS)
+    }
+  }
+
+  /** Update only recognized and correctly typed preferences. */
+  updateSettings(updates: Partial<AppSettings>): AppSettings {
+    const current = this.getSettings()
+    const next: AppSettings = { ...current }
+
+    if (updates.theme === 'light' || updates.theme === 'dark') {
+      next.theme = updates.theme
+    }
+    if (typeof updates.launchAtStartup === 'boolean') {
+      next.launchAtStartup = updates.launchAtStartup
+    }
+    if (typeof updates.showHud === 'boolean') {
+      next.showHud = updates.showHud
+    }
+
+    this.store.set('settings', next)
+    return next
   }
 
   // ---- Macros CRUD ----
