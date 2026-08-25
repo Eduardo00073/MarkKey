@@ -1,129 +1,198 @@
-# MacroKey
+<div align="center">
+  <img src="src/renderer/assets/macrokey-icon.png" width="96" alt="Ícone do MacroKey" />
 
-[![CI](https://github.com/Eduardo00073/MarkKey/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardo00073/MarkKey/actions/workflows/ci.yml)
-![Windows](https://img.shields.io/badge/plataforma-Windows-0078D4?logo=windows11&logoColor=white)
-![Electron](https://img.shields.io/badge/Electron-44-47848F?logo=electron&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+  # MacroKey
 
-Aplicativo desktop para criar e executar macros de texto globalmente no Windows. O MacroKey monitora atalhos do teclado e envia o conteúdo configurado para o aplicativo que estiver em foco.
+  **Macros globais de texto para qualquer aplicativo do Windows.**
 
-> Repositório privado. O código não possui licença para uso, cópia ou distribuição por terceiros.
+  [![CI](https://github.com/Eduardo00073/MarkKey/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardo00073/MarkKey/actions/workflows/ci.yml)
+  ![Windows](https://img.shields.io/badge/plataforma-Windows-0078D4?logo=windows11&logoColor=white)
+  ![Electron](https://img.shields.io/badge/Electron-44-47848F?logo=electron&logoColor=white)
+  ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 
-## Recursos
+  [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Segurança](SECURITY.md)
+</div>
 
-- Atalhos globais simples ou combinados com `Ctrl`, `Shift`, `Alt` e `Meta`.
-- Três modos de execução: Intercept, Auto-Type e Burst.
-- Velocidade configurável e opção de digitação humanizada.
-- HUD flutuante com progresso da macro em execução.
-- Funcionamento em segundo plano pela bandeja do Windows.
-- Tema claro ou escuro, salvo automaticamente.
-- HUD de execução opcional e desativado por padrão.
-- Inicialização com o Windows na versão instalada.
-- Editor de texto baseado no Monaco Editor.
-- Persistência local, favoritos, categorias e contador de uso.
-- Importação e exportação no formato `.macrokey`.
-- Variáveis dinâmicas resolvidas no momento da execução.
+> [!IMPORTANT]
+> Este é um repositório privado e sem licença de uso por terceiros. O acesso ao código não concede permissão para copiar, modificar ou distribuir o projeto.
 
-## Modos de execução
+## Visão geral
 
-| Modo | Comportamento |
-| --- | --- |
-| **Intercept** | Cada tecla física pressionada envia o próximo caractere da macro. |
-| **Auto-Type** | Digita o conteúdo automaticamente usando a velocidade configurada. |
-| **Burst** | Envia todo o conteúdo imediatamente. |
+O MacroKey é um aplicativo desktop que associa atalhos globais a blocos de texto. Quando um atalho é acionado, o conteúdo da macro é processado e enviado para o aplicativo que estiver em foco — navegador, editor, sistema de atendimento ou qualquer outro campo de texto do Windows.
 
-`Escape` é reservado para cancelar uma macro em execução.
+| | Recurso | O que entrega |
+| --- | --- | --- |
+| ⌨️ | **Atalhos globais** | Teclas simples ou combinações com `Ctrl`, `Shift`, `Alt` e `Meta`. |
+| ⚡ | **Três modos de execução** | Intercept, Auto-Type e Burst para comportamentos diferentes. |
+| 🧩 | **Variáveis dinâmicas** | Data, hora, clipboard, usuário, UUID, contador e outros valores em tempo real. |
+| 🎛️ | **Preferências persistentes** | Tema claro/escuro, HUD opcional e inicialização com o Windows. |
+| 🗂️ | **Biblioteca organizada** | Categorias, favoritos, cartões de macro e contador de uso. |
+| 💾 | **Dados locais** | Macros armazenadas no computador, com importação e exportação `.macrokey`. |
+
+## Como funciona
+
+```mermaid
+flowchart LR
+    A[Atalho global] --> B[Hook de teclado do Windows]
+    B --> C[Typing Engine]
+    C --> D[Resolve variáveis dinâmicas]
+    D --> E{Modo escolhido}
+    E -->|Intercept| F[Uma tecla física<br/>libera um caractere]
+    E -->|Auto-Type| G[Digitação automática<br/>com velocidade configurada]
+    E -->|Burst| H[Envio imediato<br/>do conteúdo]
+    F --> I[Aplicativo em foco]
+    G --> I
+    H --> I
+```
+
+1. O engine registra os atalhos das macros salvas.
+2. O hook nativo identifica o atalho mesmo quando o MacroKey está na bandeja.
+3. As variáveis são resolvidas somente no momento da execução.
+4. O texto é enviado conforme o modo escolhido.
+5. `Escape` cancela uma macro em andamento.
+
+### Modos de execução
+
+| Modo | Quando usar | Comportamento |
+| --- | --- | --- |
+| **Intercept** | Quando cada ação física deve avançar a macro. | Cada tecla pressionada envia o próximo caractere e bloqueia a tecla original. |
+| **Auto-Type** | Para textos longos com ritmo configurável. | Digita automaticamente usando os atrasos mínimo e máximo definidos. |
+| **Burst** | Para inserções curtas e imediatas. | Envia todo o conteúdo sem aguardar novas teclas. |
+
+### Preferências
+
+| Preferência | Padrão | Observação |
+| --- | --- | --- |
+| Tema | Claro | Pode ser alternado para escuro pela barra superior ou em **Preferências**. |
+| Mostrar HUD | Desligado | Quando ativo, exibe macro, progresso e lembrete de cancelamento. |
+| Iniciar com o Windows | Ligado no instalador | Abre silenciosamente na bandeja após entrar no Windows. |
+
+> [!NOTE]
+> A inicialização automática não é oferecida na versão portátil, porque ela é extraída para um diretório temporário diferente a cada execução.
 
 ## Variáveis dinâmicas
 
-| Variável | Resultado |
-| --- | --- |
-| `{{data}}` | Data atual no formato `DD/MM/AAAA`. |
-| `{{data:ISO}}` | Data atual no formato `AAAA-MM-DD`. |
-| `{{data:US}}` | Data atual no formato `MM/DD/AAAA`. |
-| `{{hora}}` | Horário atual com segundos. |
-| `{{hora:curta}}` | Horário atual sem segundos. |
-| `{{timestamp}}` | Timestamp Unix atual em milissegundos. |
-| `{{clipboard}}` | Texto presente na área de transferência. |
-| `{{usuario}}` | Nome do usuário do Windows. |
-| `{{hostname}}` | Nome do computador. |
-| `{{random:6}}` | Número aleatório com a quantidade indicada de dígitos. |
-| `{{uuid}}` | UUID v4. |
-| `{{contador}}` | Número da próxima execução da macro. |
-| `{{quebra}}` | Quebra de linha. |
-| `{{tab}}` | Tabulação. |
-| `{{saudacao}}` | Saudação adequada ao horário atual. |
+As variáveis usam a sintaxe `{{nome}}` e são substituídas apenas quando a macro é executada.
 
-## Tecnologias
+| Categoria | Variável | Resultado |
+| --- | --- | --- |
+| Data e hora | `{{data}}` | Data atual em `DD/MM/AAAA`. |
+| Data e hora | `{{data:ISO}}` | Data atual em `AAAA-MM-DD`. |
+| Data e hora | `{{data:US}}` | Data atual em `MM/DD/AAAA`. |
+| Data e hora | `{{hora}}` | Horário atual com segundos. |
+| Data e hora | `{{hora:curta}}` | Horário atual sem segundos. |
+| Data e hora | `{{timestamp}}` | Timestamp Unix atual em milissegundos. |
+| Sistema | `{{clipboard}}` | Texto atual da área de transferência. |
+| Sistema | `{{usuario}}` | Nome do usuário do Windows. |
+| Sistema | `{{hostname}}` | Nome do computador. |
+| Geração | `{{random:6}}` | Número aleatório com a quantidade indicada de dígitos. |
+| Geração | `{{uuid}}` | UUID v4. |
+| Contexto | `{{contador}}` | Número da próxima execução da macro. |
+| Formatação | `{{quebra}}` | Quebra de linha. |
+| Formatação | `{{tab}}` | Tabulação. |
+| Texto | `{{saudacao}}` | “Bom dia”, “Boa tarde” ou “Boa noite”, conforme o horário. |
 
-- Electron 44 e electron-vite
-- React 19 e TypeScript 5
-- Monaco Editor
-- `koffi` para integração com a API nativa do Windows
-- `electron-store` para persistência local
-- electron-builder para gerar o executável portátil
+Exemplo:
 
-## Requisitos
+```text
+{{saudacao}}, {{usuario}}!
 
-- Windows 10 ou 11, x64
-- Node.js 22.12 ou mais recente
-- npm 10 ou mais recente
+Atendimento registrado em {{data}} às {{hora:curta}}.
+Protocolo: {{uuid}}
+```
+
+## Instalação e distribuição
+
+O computador de destino não precisa ter Node.js, npm ou o código-fonte.
+
+```mermaid
+flowchart TD
+    A{Como será usado?}
+    A -->|Uso rápido ou pendrive| B[MacroKey-Portable-VERSÃO.exe]
+    A -->|Uso diário no computador| C[MacroKey-Setup-VERSÃO.exe]
+    B --> D[Abre diretamente<br/>sem instalação]
+    C --> E[Cria atalhos<br/>e permite desinstalação]
+    C --> F[Pode iniciar<br/>com o Windows]
+```
+
+| Formato | Arquivo | Características |
+| --- | --- | --- |
+| **Portátil** | `MacroKey-Portable-1.0.0.exe` | Arquivo único, executado com duplo clique e sem instalação. |
+| **Instalador** | `MacroKey-Setup-1.0.0.exe` | Escolha de pasta, atalhos, desinstalação e startup configurável. |
+
+Os artefatos locais ficam em `dist/` e não são versionados no Git.
+
+> [!WARNING]
+> Os executáveis ainda não possuem assinatura digital. Em outro computador, o Windows SmartScreen pode exibir um aviso. Uma distribuição pública profissional exige certificado de assinatura de código.
 
 ## Desenvolvimento
 
+### Requisitos
+
+- Windows 10 ou 11, x64;
+- Node.js 22.12 ou mais recente;
+- npm 10 ou mais recente.
+
+### Primeira execução
+
 ```powershell
+git clone https://github.com/Eduardo00073/MarkKey.git
+cd MarkKey
 npm install
 npm run dev
 ```
 
-Ao fechar a janela, o aplicativo continua executando na bandeja do Windows. Use **Sair** no menu da bandeja para encerrar o processo.
+Ao fechar a janela, o MacroKey continua executando na bandeja. Use **Sair** no menu da bandeja para encerrar o processo.
 
-## Comandos
+### Comandos
 
-| Comando | Finalidade |
-| --- | --- |
-| `npm run dev` | Inicia o aplicativo em modo de desenvolvimento. |
-| `npm run check` | Valida tipos, código não utilizado, ciclos e vulnerabilidades. |
-| `npm run typecheck` | Executa somente a validação do TypeScript. |
-| `npm run build` | Gera os arquivos de produção em `out/`. |
-| `npm run package` | Gera o executável portátil e o instalador em `dist/`. |
-| `npm run package:portable` | Gera somente o executável portátil. |
-| `npm run package:installer` | Gera somente o instalador do Windows. |
+| Comando | Finalidade | Saída |
+| --- | --- | --- |
+| `npm run dev` | Inicia Electron e Vite em desenvolvimento. | Aplicativo aberto com recarga rápida. |
+| `npm run typecheck` | Valida os três contextos TypeScript. | Sem artefatos. |
+| `npm run check` | Valida tipos, código morto, ciclos e vulnerabilidades. | Relatório no terminal. |
+| `npm run build` | Compila os processos principal, preload e renderer. | `out/` |
+| `npm run package:portable` | Gera somente o executável portátil x64. | `dist/MacroKey-Portable-*.exe` |
+| `npm run package:installer` | Gera somente o instalador NSIS x64. | `dist/MacroKey-Setup-*.exe` |
+| `npm run package` | Gera os dois formatos de distribuição. | `dist/` |
 
-## Distribuição no Windows
+## Arquitetura
 
-O MacroKey pode ser distribuído de duas formas. Nenhuma delas exige Node.js, npm ou abertura do terminal no computador de destino.
-
-| Arquivo | Uso |
-| --- | --- |
-| `MacroKey-Portable-1.0.0.exe` | Executável único. Basta copiar e abrir com duplo clique; não instala nada. |
-| `MacroKey-Setup-1.0.0.exe` | Instalador tradicional, com escolha da pasta, atalhos e desinstalação pelo Windows. |
-
-Os dois arquivos são gerados dentro de `dist/`. Como ainda não há assinatura digital, o Windows SmartScreen pode exibir um aviso ao abrir o programa em outro computador. Isso não impede a execução, mas uma distribuição pública profissional exigirá um certificado de assinatura de código.
-
-Na versão instalada, **Iniciar com o Windows** vem habilitado e abre o MacroKey diretamente na bandeja. A opção pode ser alterada em **Preferências**. A versão portátil não oferece essa opção porque é extraída para um caminho temporário diferente a cada execução.
-
-## Estrutura
+O projeto separa a interface das APIs nativas do sistema operacional:
 
 ```text
 src/
-├── main/       Processo principal, persistência, IPC, bandeja e engine
-├── preload/    Ponte segura entre a interface e o processo principal
-├── renderer/   Interface React, componentes e estilos
-└── shared/     Tipos e contratos compartilhados
+├── main/       Electron, engine, hook, persistência, IPC, bandeja e HUD
+├── preload/    API mínima exposta ao renderer pelo contextBridge
+├── renderer/   Interface React, Monaco Editor, componentes e temas
+└── shared/     Tipos e nomes de canais compartilhados
 ```
+
+Consulte [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para os diagramas de processos, fluxos de dados, limites de segurança e responsabilidades de cada módulo.
 
 ## Dados e segurança
 
-- Os dados das macros permanecem localmente no computador por meio do `electron-store`.
-- A interface usa isolamento de contexto e não recebe acesso direto ao Node.js.
-- O preload expõe uma API limitada e tipada para as operações autorizadas.
-- A integração contínua verifica tipos, dependências, código não utilizado, ciclos e build.
+- As macros e preferências são armazenadas localmente pelo `electron-store`.
+- O projeto não implementa telemetria nem envio das macros para um servidor.
+- O renderer usa `contextIsolation: true` e `nodeIntegration: false`.
+- O preload expõe somente operações tipadas e previamente definidas.
+- O hook ignora os eventos injetados pelo próprio MacroKey para evitar loops.
+- A integração contínua executa tipagem, análise de código morto, detecção de ciclos, auditoria de dependências e build.
+
+Para relatar uma vulnerabilidade, siga obrigatoriamente a [Política de Segurança](SECURITY.md). Não publique detalhes sensíveis em issues.
 
 ## Contribuição
 
-Consulte [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir uma branch ou pull request. Vulnerabilidades devem seguir o processo descrito em [SECURITY.md](SECURITY.md).
+Antes de alterar o projeto, leia:
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — ambiente, branches, padrões e checklist de pull request;
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — responsabilidades e fronteiras entre os processos;
+- [SECURITY.md](SECURITY.md) — escopo e divulgação responsável de vulnerabilidades.
 
 ---
 
-Copyright © 2026 Eduardo Junior Alcântara da Silva. Todos os direitos reservados.
+<div align="center">
+  Copyright © 2026 Eduardo Junior Alcântara da Silva.<br />
+  Todos os direitos reservados.
+</div>

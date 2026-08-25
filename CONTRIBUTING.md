@@ -1,36 +1,234 @@
 # Contribuindo com o MacroKey
 
-Este é um projeto privado. Mudanças devem ser discutidas e revisadas antes de chegarem à branch `main`.
+Obrigado por ajudar a evoluir o MacroKey. Este documento descreve o caminho esperado entre uma ideia e uma alteração integrada à branch `main`.
 
-## Fluxo recomendado
+> [!IMPORTANT]
+> O projeto e o repositório são privados. Somente colaboradores autorizados podem usar o código ou enviar mudanças.
 
-1. Crie uma branch curta a partir de `main`.
-2. Use um nome descritivo, como `feat/importacao` ou `fix/atalho-global`.
-3. Faça alterações pequenas e focadas.
-4. Execute `npm run check` e `npm run build`.
-5. Abra um pull request explicando o problema, a solução e como a mudança foi testada.
+## Navegação rápida
 
-## Padrões do projeto
+- [Antes de começar](#antes-de-começar)
+- [Fluxo de trabalho](#fluxo-de-trabalho)
+- [Organização do código](#organização-do-código)
+- [Padrões de implementação](#padrões-de-implementação)
+- [Validação](#validação)
+- [Commits](#commits)
+- [Pull requests](#pull-requests)
+- [Definição de pronto](#definição-de-pronto)
 
-- Preserve a separação entre `main`, `preload`, `renderer` e `shared`.
-- Não exponha APIs do Node.js diretamente ao renderer.
-- Mantenha os contratos IPC tipados e com o menor escopo necessário.
-- Evite dependências novas quando a plataforma ou o projeto já oferecem a funcionalidade.
-- Não inclua `node_modules/`, `out/`, `dist/`, dados pessoais ou arquivos gerados nos commits.
+## Antes de começar
+
+### Requisitos
+
+- Windows 10 ou 11, x64;
+- Node.js 22.12 ou mais recente;
+- npm 10 ou mais recente;
+- Git configurado com seu nome e e-mail;
+- acesso ao repositório privado.
+
+### Preparação do ambiente
+
+```powershell
+git clone https://github.com/Eduardo00073/MarkKey.git
+cd MarkKey
+npm install
+npm run check
+npm run dev
+```
+
+Se a validação inicial falhar antes de qualquer alteração, registre o resultado e resolva o estado de base antes de iniciar uma nova funcionalidade.
+
+## Fluxo de trabalho
+
+```mermaid
+flowchart LR
+    A[Atualizar main] --> B[Criar branch]
+    B --> C[Implementar mudança focada]
+    C --> D[Executar checks]
+    D --> E[Testar no Windows]
+    E --> F[Commit convencional]
+    F --> G[Abrir pull request]
+    G --> H{Revisão e CI}
+    H -->|Ajustes| C
+    H -->|Aprovado| I[Squash merge em main]
+```
+
+### 1. Atualize a base
+
+```powershell
+git switch main
+git pull --ff-only
+```
+
+### 2. Crie uma branch curta
+
+| Tipo | Padrão | Exemplo |
+| --- | --- | --- |
+| Funcionalidade | `feat/<assunto>` | `feat/pesquisa-de-macros` |
+| Correção | `fix/<assunto>` | `fix/atalho-com-shift` |
+| Refatoração | `refactor/<assunto>` | `refactor/contratos-ipc` |
+| Documentação | `docs/<assunto>` | `docs/arquitetura` |
+| Manutenção | `chore/<assunto>` | `chore/atualiza-dependencias` |
+
+```powershell
+git switch -c feat/minha-mudanca
+```
+
+### 3. Mantenha o escopo pequeno
+
+Uma branch deve responder a uma pergunta clara. Não misture redesign, atualização de dependências e correção do engine no mesmo pull request.
+
+## Organização do código
+
+Antes de mover uma responsabilidade, consulte [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+| Área | Responsabilidade | Não deve fazer |
+| --- | --- | --- |
+| `src/main/` | Electron, Windows API, arquivos, persistência, engine e IPC. | Renderizar a interface React. |
+| `src/preload/` | Expor uma API mínima e tipada pelo `contextBridge`. | Entregar acesso genérico ao Node.js. |
+| `src/renderer/` | Interface, estado visual, componentes e temas. | Importar módulos nativos ou acessar o sistema diretamente. |
+| `src/shared/` | Tipos e constantes usados por mais de um processo. | Concentrar regras de negócio específicas de um processo. |
+
+```mermaid
+flowchart LR
+    R[Renderer] -->|window.api| P[Preload]
+    P -->|IPC permitido| M[Main]
+    M --> W[Windows / arquivos / store]
+
+    R -. acesso direto bloqueado .-> W
+```
+
+## Padrões de implementação
+
+### TypeScript e contratos
+
+- Não use `any` sem uma justificativa concreta e localizada.
+- Valide dados recebidos de arquivos, IPC ou outras fronteiras externas.
+- Mantenha os nomes de canais IPC em `src/shared/types.ts`.
+- Exponha pelo preload somente as operações necessárias para a interface.
+- Preserve os tipos de entrada separados dos campos gerados em runtime.
+
+### Electron e segurança
+
+- Preserve `contextIsolation: true` e `nodeIntegration: false`.
+- Não exponha `ipcRenderer`, `fs`, `child_process` ou APIs equivalentes diretamente ao renderer.
+- Não registre atalhos, startup ou hooks nativos na versão portátil quando o caminho for temporário.
+- Libere hooks, timers, janelas auxiliares e ícones de bandeja no encerramento.
+- Alterações em importação `.macrokey` devem tratar o arquivo como entrada não confiável.
+
+### Interface e experiência
+
+- Teste os temas claro e escuro.
+- Use os ícones vetoriais existentes do Lucide para ações da interface.
+- Inclua `title` ou `aria-label` em botões representados somente por ícones.
+- Garanta foco visível e operação por teclado em controles interativos.
+- Evite texto codificado em imagens.
+- Não torne o HUD obrigatório: execução discreta é uma preferência do usuário.
+
+### Dependências
+
+Antes de adicionar um pacote, verifique:
+
+1. se a plataforma ou uma dependência existente já resolve o problema;
+2. se o pacote é mantido e compatível com a versão atual do Electron;
+3. o impacto no tamanho do executável;
+4. licenças e vulnerabilidades conhecidas;
+5. se a dependência precisa executar scripts de instalação.
+
+## Validação
+
+### Portão mínimo obrigatório
+
+```powershell
+npm run check
+npm run build
+```
+
+| Verificação | Cobertura |
+| --- | --- |
+| TypeScript | Processos main, preload e renderer. |
+| Knip | Arquivos, exports e dependências sem uso. |
+| Knip cycles | Dependências circulares. |
+| npm audit | Vulnerabilidades conhecidas nas dependências. |
+| Build | Compilação real dos três contextos do Electron. |
+
+### Testes manuais por tipo de alteração
+
+| Alteração | Validação adicional |
+| --- | --- |
+| Interface | Temas claro/escuro, teclado, resoluções mínimas e estados vazios. |
+| Engine | Intercept, Auto-Type, Burst, cancelamento com `Escape` e combinações de modificadores. |
+| Persistência | Fechar, reabrir e confirmar macros/preferências salvas. |
+| Startup | Instalar, reiniciar sessão e confirmar abertura na bandeja. |
+| HUD | Ativar/desativar, executar macro e confirmar que não rouba foco. |
+| Importação | Arquivo válido, JSON inválido, versão futura e campos ausentes. |
+| Empacotamento | Abrir o portátil e concluir instalação/desinstalação do Setup. |
 
 ## Commits
 
-Prefira mensagens objetivas no formato Conventional Commits, por exemplo:
+Use mensagens no formato [Conventional Commits](https://www.conventionalcommits.org/):
 
-- `feat: adiciona duplicação de macros`
-- `fix: cancela digitação ao pressionar escape`
-- `refactor: simplifica persistência de configurações`
-- `docs: atualiza instruções de desenvolvimento`
+```text
+tipo(escopo opcional): descrição curta no imperativo
+```
 
-## Checklist do pull request
+| Tipo | Uso | Exemplo |
+| --- | --- | --- |
+| `feat` | Nova capacidade para o usuário. | `feat: adiciona pesquisa de macros` |
+| `fix` | Correção de comportamento. | `fix: preserva modificadores no hotkey` |
+| `refactor` | Mudança interna sem alterar comportamento. | `refactor: centraliza preferências do aplicativo` |
+| `docs` | Documentação. | `docs: detalha fluxo de segurança` |
+| `test` | Testes. | `test: cobre parser de variáveis` |
+| `build` | Empacotamento ou dependências de build. | `build: configura artefato arm64` |
+| `ci` | Automação do GitHub Actions. | `ci: valida pacote no Windows` |
+| `chore` | Manutenção sem impacto direto no produto. | `chore: atualiza dependências` |
 
-- [ ] A mudança tem um objetivo claro e não inclui alterações alheias.
-- [ ] `npm run check` foi executado com sucesso.
-- [ ] `npm run build` foi executado com sucesso.
-- [ ] O comportamento visual ou nativo foi testado no Windows, quando aplicável.
-- [ ] A documentação foi atualizada, quando necessária.
+Evite mensagens genéricas como `ajustes`, `update` ou `corrige coisas`.
+
+## Pull requests
+
+O pull request deve permitir que outra pessoa entenda a mudança sem abrir todos os arquivos.
+
+Inclua:
+
+- o problema ou objetivo;
+- a solução escolhida e decisões relevantes;
+- como a mudança foi validada;
+- imagens antes/depois para alterações visuais;
+- riscos, limitações ou trabalho futuro;
+- referência à issue, quando existir.
+
+### Checklist do autor
+
+- [ ] A branch contém uma única mudança coerente.
+- [ ] Não há `node_modules/`, `out/`, `dist/`, logs ou dados pessoais no commit.
+- [ ] Não há tokens, senhas, chaves ou outros segredos.
+- [ ] `npm run check` passou.
+- [ ] `npm run build` passou.
+- [ ] O comportamento foi testado no Windows quando aplicável.
+- [ ] Os dois temas foram conferidos quando a interface mudou.
+- [ ] A documentação acompanha mudanças de comportamento ou arquitetura.
+- [ ] O PR explica riscos e limitações conhecidos.
+
+## Definição de pronto
+
+```mermaid
+flowchart TD
+    A[Código concluído] --> B{Checks locais passaram?}
+    B -->|Não| A
+    B -->|Sim| C{Teste manual aplicável passou?}
+    C -->|Não| A
+    C -->|Sim| D{Documentação está atualizada?}
+    D -->|Não| E[Atualizar documentação]
+    E --> D
+    D -->|Sim| F[Pull request revisável]
+    F --> G{CI e revisão aprovadas?}
+    G -->|Não| A
+    G -->|Sim| H[Pronto para merge]
+```
+
+Uma alteração só está pronta quando o código, a validação e a documentação contam a mesma história.
+
+## Segurança
+
+Não abra uma issue pública ou um pull request com detalhes exploráveis de uma vulnerabilidade. Interrompa o fluxo normal e siga [SECURITY.md](SECURITY.md).
