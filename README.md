@@ -11,11 +11,21 @@
   ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 
-  [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Segurança](SECURITY.md)
+  [Interface](#interface) · [Visão geral](#visão-geral) · [Como funciona](#como-funciona) · [Instalação](#instalação-e-distribuição) · [Desenvolvimento](#desenvolvimento) · [Arquitetura](docs/ARCHITECTURE.md) · [Segurança](SECURITY.md)
 </div>
 
 > [!IMPORTANT]
 > Este é um repositório privado e sem licença de uso por terceiros. O acesso ao código não concede permissão para copiar, modificar ou distribuir o projeto.
+
+## Interface
+
+<p align="center">
+  <img src="docs/images/macrokey-interface-dark.png" alt="Interface do MacroKey no tema escuro com a biblioteca e o editor de macros" width="100%" />
+</p>
+
+<p align="center">
+  <sub>Biblioteca e editor de macros no tema escuro.</sub>
+</p>
 
 ## Visão geral
 
