@@ -35,7 +35,9 @@
     "check": "npm run typecheck && knip --no-progress && knip --no-progress --cycles && npm audit",
     "build": "npm run typecheck && electron-vite build",
     "preview": "set ELECTRON_RUN_AS_NODE=&& electron-vite preview",
-    "package": "npm run build && electron-builder --win"
+    "package": "npm run build && electron-builder --win",
+    "package:portable": "npm run build && electron-builder --win portable --x64",
+    "package:installer": "npm run build && electron-builder --win nsis --x64"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -61,7 +63,32 @@
     "appId": "com.macrokey.app",
     "productName": "MacroKey",
     "win": {
-      "target": "portable"
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "MacroKey-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "artifactName": "MacroKey-Setup-${version}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MacroKey",
+      "runAfterFinish": true
     },
     "files": [
       "out/**/*"

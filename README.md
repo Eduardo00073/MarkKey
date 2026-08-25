@@ -83,7 +83,20 @@ Ao fechar a janela, o aplicativo continua executando na bandeja do Windows. Use 
 | `npm run check` | Valida tipos, código não utilizado, ciclos e vulnerabilidades. |
 | `npm run typecheck` | Executa somente a validação do TypeScript. |
 | `npm run build` | Gera os arquivos de produção em `out/`. |
-| `npm run package` | Gera o executável portátil para Windows em `dist/`. |
+| `npm run package` | Gera o executável portátil e o instalador em `dist/`. |
+| `npm run package:portable` | Gera somente o executável portátil. |
+| `npm run package:installer` | Gera somente o instalador do Windows. |
+
+## Distribuição no Windows
+
+O MacroKey pode ser distribuído de duas formas. Nenhuma delas exige Node.js, npm ou abertura do terminal no computador de destino.
+
+| Arquivo | Uso |
+| --- | --- |
+| `MacroKey-Portable-1.0.0.exe` | Executável único. Basta copiar e abrir com duplo clique; não instala nada. |
+| `MacroKey-Setup-1.0.0.exe` | Instalador tradicional, com escolha da pasta, atalhos e desinstalação pelo Windows. |
+
+Os dois arquivos são gerados dentro de `dist/`. Como ainda não há assinatura digital, o Windows SmartScreen pode exibir um aviso ao abrir o programa em outro computador. Isso não impede a execução, mas uma distribuição pública profissional exigirá um certificado de assinatura de código.
 
 ## Estrutura
 
