@@ -40,7 +40,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "electron-store": "^10.0.0",
-    "koffi": "^3.1.4",
+    "koffi": "^3.1.6",
     "lucide-react": "^0.500.0",
     "monaco-editor": "^0.52.0",
     "react": "^19.1.0",
